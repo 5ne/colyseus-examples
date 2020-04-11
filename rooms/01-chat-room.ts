@@ -5,15 +5,15 @@ export class ChatRoom extends Room {
     maxClients = 4;
 
     onCreate (options) {
-        console.log("BasicRoom created!", options);
+        console.log("BasicRoom created yo!", options);
     }
 
     onJoin (client) {
-        this.broadcast(`${ client.sessionId } joined.`);
+        this.broadcast(`${ client.sessionId } joined yo.`);
     }
 
     onLeave (client) {
-        this.broadcast(`${ client.sessionId } left.`);
+        this.broadcast(`${ client.sessionId } left yo.`);
     }
 
     onMessage (client, data) {

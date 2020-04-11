@@ -43,7 +43,7 @@ Open [http://localhost:2567](http://localhost:2567) in your browser.
 
 You can easily deploy Colyseus Examples on Heroku.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/colyseus/colyseus-examples)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/5ne/colyseus-examples)
 
 ## License
 
