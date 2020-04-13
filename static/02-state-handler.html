@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <style>
       body { font-family: Tahoma, Geneva, sans-serif; }
@@ -31,25 +33,26 @@
         display: inline
       }
     </style>
-
   </head>
   <body>
 
-    <div class="error-message"><br></div>
-
-    <div class="create-or-join">
-      <form id="form">
-        <input type="text" id="input" value="" autofocus/>
-        <input type="submit" value="Create or Join Room" />
-      </form>
-    </div>
-    <div class="commands">
-      <strong>commands</strong><br>
-      <button onclick="up()">up</button>
-      <button onclick="down()">down</button>
-      <br />
-      <button onclick="left()">left</button>
-      <button onclick="right()">right</button>
+    <div class="container">
+      <div class="row">
+        <div class="create-or-join">
+          <form id="form">
+            <input type="text" id="input" value="" autofocus/>
+            <input type="submit" value="Create or Join Room" />
+          </form>
+        </div>
+        <div class="commands">
+          <strong>commands</strong><br>
+          <button onclick="up()">up</button>
+          <button onclick="down()">down</button>
+          <br />
+          <button onclick="left()">left</button>
+          <button onclick="right()">right</button>
+        </div>
+      </div>
     </div>
     <script>
         $('.commands').hide();
@@ -60,7 +63,8 @@
         document.querySelector("#form").onsubmit = function(e) {
           e.preventDefault();
           var input = document.querySelector("#input");
-          client.joinOrCreate("state_handler", { roomId: input.value }).then(room_instance => {
+          console.log("input value: " + input.value);
+          client.joinOrCreate("state_handler", { roomCode: input.value }).then(room_instance => {
             room = room_instance;
 
             var players = {};

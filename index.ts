@@ -36,7 +36,7 @@ gameServer.define("chat_with_options", ChatRoom, {
 
 gameServer
   .define("state_handler", StateHandlerRoom)
-  .filterBy(["room"]);
+  .filterBy(["roomCode"]);
 
 gameServer.define("auth", AuthRoom);
 gameServer.define("reconnection", ReconnectionRoom);

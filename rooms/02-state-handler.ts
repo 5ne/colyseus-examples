@@ -38,9 +38,9 @@ export class StateHandlerRoom extends Room<State> {
 
     onCreate (options) {
         console.log("StateHandlerRoom created!", options);
-        if (options.roomId != "") {
+        if (options.roomCode != "") {
             console.log("onCreate: "+this.roomId);
-            this.roomId = options.roomId;
+            this.roomId = options.roomCode;
         }
 
         this.setState(new State());      
@@ -52,10 +52,10 @@ export class StateHandlerRoom extends Room<State> {
     }
 
     onJoin (client: Client, options: any) {
-        // if (options.roomId != "") {
-        //     console.log("onjoin: "+this.roomId);
-        //     this.roomId = options.roomId;
-        // }
+        if (options.roomCode != "") {
+            console.log("onjoin: "+this.roomId);
+            this.roomId = options.roomCode;
+        }
         this.send(client, { hello: "world!" });
         this.state.createPlayer(client.sessionId);
     }
