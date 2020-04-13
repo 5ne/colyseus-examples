@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "browserify": "^14.4.0",
+    "colyseus.js": "^0.12.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   }

@@ -34,7 +34,10 @@ gameServer.define("chat_with_options", ChatRoom, {
     custom_options: "you can use me on Room#onCreate"
 });
 
-gameServer.define("state_handler", StateHandlerRoom);
+gameServer
+  .define("state_handler", StateHandlerRoom)
+  .filterBy(["room"]);
+
 gameServer.define("auth", AuthRoom);
 gameServer.define("reconnection", ReconnectionRoom);
 

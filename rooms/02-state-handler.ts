@@ -38,8 +38,12 @@ export class StateHandlerRoom extends Room<State> {
 
     onCreate (options) {
         console.log("StateHandlerRoom created!", options);
+        if (options.roomId != "") {
+            console.log("onCreate: "+this.roomId);
+            this.roomId = options.roomId;
+        }
 
-        this.setState(new State());
+        this.setState(new State());      
     }
 
     onAuth(client, options, req) {
@@ -47,7 +51,11 @@ export class StateHandlerRoom extends Room<State> {
         return true;
     }
 
-    onJoin (client: Client) {
+    onJoin (client: Client, options: any) {
+        // if (options.roomId != "") {
+        //     console.log("onjoin: "+this.roomId);
+        //     this.roomId = options.roomId;
+        // }
         this.send(client, { hello: "world!" });
         this.state.createPlayer(client.sessionId);
     }
