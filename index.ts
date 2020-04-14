@@ -8,6 +8,7 @@ import { monitor } from '@colyseus/monitor';
 
 // Import demo room handlers
 import { ChatRoom } from "./rooms/01-chat-room";
+import { BuzzRoom } from "./rooms/buzz";
 import { StateHandlerRoom } from "./rooms/02-state-handler";
 import { AuthRoom } from "./rooms/03-auth";
 import { ReconnectionRoom } from './rooms/04-reconnection';
@@ -36,6 +37,10 @@ gameServer.define("chat_with_options", ChatRoom, {
 
 gameServer
   .define("state_handler", StateHandlerRoom)
+  .filterBy(["roomCode"]);
+
+  gameServer
+  .define("buzz", BuzzRoom)
   .filterBy(["roomCode"]);
 
 gameServer.define("auth", AuthRoom);

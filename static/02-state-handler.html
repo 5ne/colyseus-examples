@@ -5,14 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <style>
-      body { font-family: Tahoma, Geneva, sans-serif; }
-    </style>
-
     <!-- colyseus.js client -->
     <script type="text/javascript" src="https://raw.githack.com/colyseus/colyseus.js/master/dist/colyseus.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
-    
+    <script>
+      $('.commands').hide();
+      var host = window.document.location.host.replace(/:.*/, '');
+
+      var client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
+      var room;
+      document.querySelector("#form").onsubmit = function(e) {
+        e.preventDefault();
+        var input = document.querySelector("#input");
+        console.log("input value: " + input.value);
+        client.joinOrCreate("state_handler", { roomCode: input.value }).then(room_instance => {
+          room = room_instance;
+
+          var players = {};
+          var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
+
+          // listen to patches coming from the server
+          room.state.players.onAdd = function (player, sessionId) {
+              var dom = document.createElement("div");
+              dom.className = "player";
+              dom.style.left = player.x + "px";
+              dom.style.top = player.y + "px";
+              dom.style.background = colors[Math.floor(Math.random() * colors.length)];
+              dom.innerText = "Room: " + room.id + "\nPlayer " + sessionId;
+
+              players[sessionId] = dom;
+              document.body.appendChild(dom);
+              $('.commands').show();
+              $('.create-or-join').hide();
+
+          }
+
+          room.state.players.onRemove = function (player, sessionId) {
+              document.body.removeChild(players[sessionId]);
+              delete players[sessionId];
+          }
+
+          room.state.players.onChange = function (player, sessionId) {
+              var dom = players[sessionId];
+              dom.style.left = player.x + "px";
+              dom.style.top = player.y + "px";
+          }
+
+          window.addEventListener("keydown", function (e) {
+              if (e.which === 38) {
+                  up();
+
+              } else if (e.which === 39) {
+                  right();
+
+              } else if (e.which === 40) {
+                  down();
+
+              } else if (e.which === 37) {
+                  left();
+              }
+          });
+
+       });
+      }
+
+      function up () {
+          room.send({ y: -1 });
+      }
+
+      function right () {
+          room.send({ x: 1 });
+      }
+
+      function down () {
+          room.send({ y: 1 })
+      }
+
+      function left () {
+          room.send({ x: -1 })
+      }
+    </script>    
+
     <style type="text/css">
       .player {
         width: 100px;
@@ -54,84 +127,7 @@
         </div>
       </div>
     </div>
-    <script>
-        $('.commands').hide();
-        var host = window.document.location.host.replace(/:.*/, '');
-
-        var client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
-        var room;
-        document.querySelector("#form").onsubmit = function(e) {
-          e.preventDefault();
-          var input = document.querySelector("#input");
-          console.log("input value: " + input.value);
-          client.joinOrCreate("state_handler", { roomCode: input.value }).then(room_instance => {
-            room = room_instance;
-
-            var players = {};
-            var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
-
-            // listen to patches coming from the server
-            room.state.players.onAdd = function (player, sessionId) {
-                var dom = document.createElement("div");
-                dom.className = "player";
-                dom.style.left = player.x + "px";
-                dom.style.top = player.y + "px";
-                dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-                dom.innerText = "Room: " + room.id + "\nPlayer " + sessionId;
-
-                players[sessionId] = dom;
-                document.body.appendChild(dom);
-                $('.commands').show();
-                $('.create-or-join').hide();
-
-            }
-
-            room.state.players.onRemove = function (player, sessionId) {
-                document.body.removeChild(players[sessionId]);
-                delete players[sessionId];
-            }
-
-            room.state.players.onChange = function (player, sessionId) {
-                var dom = players[sessionId];
-                dom.style.left = player.x + "px";
-                dom.style.top = player.y + "px";
-            }
-
-            window.addEventListener("keydown", function (e) {
-                if (e.which === 38) {
-                    up();
-
-                } else if (e.which === 39) {
-                    right();
-
-                } else if (e.which === 40) {
-                    down();
-
-                } else if (e.which === 37) {
-                    left();
-                }
-            });
-
-         });
-        }
-
-        function up () {
-            room.send({ y: -1 });
-        }
-
-        function right () {
-            room.send({ x: 1 });
-        }
-
-        function down () {
-            room.send({ y: 1 })
-        }
-
-        function left () {
-            room.send({ x: -1 })
-        }
 
 
-    </script>
   </body>
 </html>
