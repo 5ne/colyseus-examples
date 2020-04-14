@@ -2,16 +2,19 @@ import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 
 export class Player extends Schema {
-    @type("number")
-    x = Math.floor(Math.random() * 400);
+    @type("string")
+    name = "";
 
     @type("number")
-    y = Math.floor(Math.random() * 400);
+    buzzerWinner = 0;
 }
 
 export class State extends Schema {
     @type({ map: Player })
     players = new MapSchema<Player>();
+    
+    @type("string")
+    winnerId = "";
 
     something = "This attribute won't be sent to the client-side";
 
@@ -23,14 +26,22 @@ export class State extends Schema {
         delete this.players[ id ];
     }
 
-    movePlayer (id: string, movement: any) {
-        if (movement.x) {
-            this.players[ id ].x += movement.x * 10;
-
-        } else if (movement.y) {
-            this.players[ id ].y += movement.y * 10;
+    buzz (id: string) {
+        console.log("buzz");
+        if (!this.winnerId) {
+            this.players[ id ].buzzerWinner = 1;
+            this.winnerId = id;
         }
     }
+
+    reset () {
+        console.log("reset");
+        if (this.winnerId) {
+            this.players[ this.winnerId ].buzzerWinner = 0;
+            this.winnerId = "";
+        }
+    }
+
 }
 
 export class BuzzRoom extends Room<State> {
@@ -61,12 +72,17 @@ export class BuzzRoom extends Room<State> {
     }
 
     onLeave (client) {
+        console.log("onLeave: "+client.sessionId);
         this.state.removePlayer(client.sessionId);
     }
 
     onMessage (client, data) {
         console.log("BuzzRoom received message from", client.sessionId, ":", data);
-        this.state.movePlayer(client.sessionId, data);
+        if (data.buzz) {
+            this.state.buzz(client.sessionId);
+        } else if (data.reset) {
+            this.state.reset();
+        }      
     }
 
     onDispose () {

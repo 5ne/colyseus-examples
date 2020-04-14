@@ -5,6 +5,7 @@ export class ReconnectionRoom extends Room {
     }
 
     onJoin (client: Client, options: any, auth: any) {
+        console.log(client.sessionId, "joined");
         this.send(client, "Welcome!");
     }
 
@@ -20,6 +21,7 @@ export class ReconnectionRoom extends Room {
             }
 
             const reconnectedClient = await this.allowReconnection(client, 60);
+            console.log(client.sessionId, "reconnect", { consented });
             console.log("Reconnected!");
 
             this.send(reconnectedClient, "Welcome back!");

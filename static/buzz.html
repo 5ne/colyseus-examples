@@ -13,8 +13,6 @@
       .player {
         width: 100px;
         height: 100px;
-        position: absolute;
-        padding-top: 24px;
         box-sizing: border-box;
         left: 0;
         top: 0;
@@ -40,13 +38,10 @@
             <input type="submit" value="Create or Join Room" />
           </form>
         </div>
+        <div class="players" />
         <div class="commands">
-          <strong>commands</strong><br>
-          <button onclick="up()">up</button>
-          <button onclick="down()">down</button>
-          <br />
-          <button onclick="left()">left</button>
-          <button onclick="right()">right</button>
+          <button onclick="buzz()">buzz</button>
+          <button onclick="reset()">reset</button>
         </div>
       </div>
     </div>
@@ -65,68 +60,59 @@
           room = room_instance;
 
           var players = {};
-          var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
+          var colors = ['#4885ed'];
 
           // listen to patches coming from the server
           room.state.players.onAdd = function (player, sessionId) {
               var dom = document.createElement("div");
               dom.className = "player";
-              dom.style.left = player.x + "px";
-              dom.style.top = player.y + "px";
+              dom.id = sessionId;
+              //dom.style.left = player.x + "px";
+              //dom.style.top = player.y + "px";
               dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-              dom.innerText = "Room: " + room.id + "\nPlayer " + sessionId;
+              dom.innerText = "Player " + sessionId + "\n" + player.buzzerWinner;
 
               players[sessionId] = dom;
-              document.body.appendChild(dom);
+              //document.body.appendChild(dom);
+              $('.players').append(dom);
               $('.commands').show();
               $('.create-or-join').hide();
 
           }
 
           room.state.players.onRemove = function (player, sessionId) {
-              document.body.removeChild(players[sessionId]);
+            $('#'+sessionId).remove();
+             // document.body.removeChild(players[sessionId]);
               delete players[sessionId];
           }
 
           room.state.players.onChange = function (player, sessionId) {
+              console.log("onchange");
               var dom = players[sessionId];
-              dom.style.left = player.x + "px";
-              dom.style.top = player.y + "px";
+              dom.innerText = "Player " + sessionId + "\n" + player.buzzerWinner;
+              //dom.style.left = player.x + "px";
+              //dom.style.top = player.y + "px";
           }
 
           window.addEventListener("keydown", function (e) {
-              if (e.which === 38) {
-                  up();
-
-              } else if (e.which === 39) {
-                  right();
-
-              } else if (e.which === 40) {
-                  down();
-
-              } else if (e.which === 37) {
-                  left();
+              if (e.which === 32) {
+                  buzz();
+              } else if (e.which === 13) {
+                  reset();
               }
           });
 
        });
       }
 
-      function up () {
-          room.send({ y: -1 });
+      function buzz () {
+          room.send({ buzz: 1});
       }
 
-      function right () {
-          room.send({ x: 1 });
+      function reset () {
+          room.send({ reset: 1 });
       }
 
-      function down () {
-          room.send({ y: 1 })
-      }
-
-      function left () {
-          room.send({ x: -1 })
-      }
     </script>    
   </body>
 </html>
