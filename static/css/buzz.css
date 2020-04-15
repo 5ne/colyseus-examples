@@ -1,0 +1,16 @@
+.player {
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    left: 0;
+    top: 0;
+  }
+
+  .error-message {
+    display: none;
+  }
+
+  .commands {
+    display: none;
+    display: inline
+  }

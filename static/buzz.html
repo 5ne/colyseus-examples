@@ -4,46 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/form.css" >
+    <link rel="stylesheet" href="css/buzz.css" >
 
     <!-- colyseus.js client -->
     <script type="text/javascript" src="https://raw.githack.com/colyseus/colyseus.js/master/dist/colyseus.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
-
-    <style type="text/css">
-      .player {
-        width: 100px;
-        height: 100px;
-        box-sizing: border-box;
-        left: 0;
-        top: 0;
-      }
-
-      .error-message {
-        display: none;
-      }
-
-      .commands {
-        display: none;
-        display: inline
-      }
-    </style>
   </head>
-  <body>
-
-    <div class="container">
-      <div class="row">
-        <div class="create-or-join">
-          <form id="form">
-            <input type="text" id="input" value="" autofocus/>
-            <input type="submit" value="Create or Join Room" />
-          </form>
-        </div>
-        <div class="players" />
-        <div class="commands">
-          <button onclick="buzz()">buzz</button>
-          <button onclick="reset()">reset</button>
-        </div>
-      </div>
+  <body class="text-center">
+    <div class="create-or-join">
+      <form class="form-signin" id="form">
+        <h1 class="h3 mb-3 font-weight-normal">Join or Create a Room</h1>
+        <label for="inputEmail" class="sr-only">Room</label>
+        <input type="text" id="input" class="form-control mb-3" placeholder="Room" required autofocus>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Go</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+      </form>
+    </div>
+    <div class="players" />
+    <div class="commands">
+      <button class="btn btn-lg btn-primary btn-block" onclick="buzz()">buzz</button>
+      <button class="btn btn-lg btn-primary btn-block" onclick="reset()">reset</button>
     </div>
 
     <script>

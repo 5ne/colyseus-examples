@@ -73,6 +73,7 @@ export class BuzzRoom extends Room<State> {
 
     onLeave (client) {
         console.log("onLeave: "+client.sessionId);
+        this.state.reset();
         this.state.removePlayer(client.sessionId);
     }
 
