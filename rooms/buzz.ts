@@ -18,8 +18,11 @@ export class State extends Schema {
 
     something = "This attribute won't be sent to the client-side";
 
-    createPlayer (id: string) {
-        this.players[ id ] = new Player();
+    createPlayer (id: string, name: string) {
+        var p = new Player();
+        p.name = name;
+
+        this.players[ id ] = p;
     }
 
     removePlayer (id: string) {
@@ -67,8 +70,7 @@ export class BuzzRoom extends Room<State> {
             console.log("onjoin: "+this.roomId);
             this.roomId = options.roomCode;
         }
-        this.send(client, { hello: "world!" });
-        this.state.createPlayer(client.sessionId);
+        this.state.createPlayer(client.sessionId, options.name);
     }
 
     onLeave (client) {

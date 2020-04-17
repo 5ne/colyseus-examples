@@ -12,19 +12,28 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
   </head>
   <body class="text-center">
-    <div class="create-or-join">
-      <form class="form-signin" id="form">
-        <h1 class="h3 mb-3 font-weight-normal">Join or Create a Room</h1>
-        <label for="inputEmail" class="sr-only">Room</label>
-        <input type="text" id="input" class="form-control mb-3" placeholder="Room" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Go</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
-      </form>
-    </div>
-    <div class="players" />
-    <div class="commands">
-      <button class="btn btn-lg btn-primary btn-block" onclick="buzz()">buzz</button>
-      <button class="btn btn-lg btn-primary btn-block" onclick="reset()">reset</button>
+      <div class="p-4">
+        <div class="create-or-join">
+          <form class="form-signin" id="form">
+            <h1 class="h3 mb-3 font-weight-normal">Join or Create a Room</h1>
+            <label for="inputEmail" class="sr-only">Room</label>
+            <input type="text" id="room" class="form-control mb-3" placeholder="Room" maxlength="30" required autofocus>
+            <input type="text" id="name" class="form-control mb-3" placeholder="Your name" maxlength="30" required autofocus>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Go</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+          </form>
+        </div>
+        <div class="commands">
+          <div class="d-flex flex-column player-column">
+            <div>
+              <div class="players d-flex flex-row flex-wrap player-column">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" onclick="buzz()">buzz</button>
+          <button class="btn btn-lg btn-primary btn-block" onclick="reset()">reset</button>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -35,9 +44,11 @@
       var room;
       document.querySelector("#form").onsubmit = function(e) {
         e.preventDefault();
-        var input = document.querySelector("#input");
-        console.log("input value: " + input.value);
-        client.joinOrCreate("buzz", { roomCode: input.value }).then(room_instance => {
+        var roomName = document.querySelector("#room");
+        var name = document.querySelector("#name");
+        console.log("room value: " + roomName.value);
+        console.log("name value: " + name.value);
+        client.joinOrCreate("buzz", { roomCode: roomName.value, name:name.value }).then(room_instance => {
           room = room_instance;
 
           var players = {};
@@ -45,16 +56,10 @@
 
           // listen to patches coming from the server
           room.state.players.onAdd = function (player, sessionId) {
-              var dom = document.createElement("div");
-              dom.className = "player";
-              dom.id = sessionId;
-              //dom.style.left = player.x + "px";
-              //dom.style.top = player.y + "px";
-              dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-              dom.innerText = "Player " + sessionId + "\n" + player.buzzerWinner;
+            var dom = $('<div class="card bg-light mb-3" id="' + sessionId + '">'
+                + '<div class="card-header">' + 'Player: ' + player.name + '</div></div>');
 
               players[sessionId] = dom;
-              //document.body.appendChild(dom);
               $('.players').append(dom);
               $('.commands').show();
               $('.create-or-join').hide();
@@ -69,8 +74,23 @@
 
           room.state.players.onChange = function (player, sessionId) {
               console.log("onchange");
-              var dom = players[sessionId];
-              dom.innerText = "Player " + sessionId + "\n" + player.buzzerWinner;
+              if (player.buzzerWinner) {
+                var dom = players[sessionId];
+                dom.removeClass('bg-light');
+                dom.addClass('bg-primary');
+              } else {
+                var dom = players[sessionId];
+                dom.removeClass('bg-primary');
+                dom.addClass('bg-light');
+              }
+
+              // var dom = $('<div class="card bg-primary mb-3"><div class="card-header" id="'
+              //   + sessionId +'">' + "Player " + sessionId + "\n" + player.buzzerWinner + '</div></div>');
+              // players[sessionId] = dom;
+              // $('#'+sessionId).rem
+              // $('.players').append(dom);
+
+              //dom.innerText = "Player " + sessionId + "\n" + player.buzzerWinner;
               //dom.style.left = player.x + "px";
               //dom.style.top = player.y + "px";
           }

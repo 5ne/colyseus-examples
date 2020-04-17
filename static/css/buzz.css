@@ -6,11 +6,15 @@
     top: 0;
   }
 
+  .player-column {
+    width: 152px;
+  }
+
   .error-message {
     display: none;
   }
 
   .commands {
     display: none;
-    display: inline
+    display: inline;
   }
